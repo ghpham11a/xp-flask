@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: xp-flask-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: xp-flask
+  template:
+    metadata:
+      labels:
+        app: xp-flask
+    spec:
+      containers:
+      - name: xp-flask
+        image: xp-flask:latest
+        imagePullPolicy: Never 
+        ports:
+        - containerPort: 80
+        env:
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: dev-secrets
+              key: POSTGRES_HOST
+        - name: POSTGRES_NAME
+          valueFrom:
+            secretKeyRef:
+              name: dev-secrets
+              key: POSTGRES_NAME
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: dev-secrets
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dev-secrets
+              key: POSTGRES_PASSWORD
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name

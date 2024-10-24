@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 
-from app import todo
+from app import todo, user
 
 def create_app(test_config=None):
     # create and configure the app
@@ -26,5 +26,6 @@ def create_app(test_config=None):
         pass
 
     app.register_blueprint(todo.bp)
+    app.register_blueprint(user.bp)
 
     return app
