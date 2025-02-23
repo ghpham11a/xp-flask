@@ -91,7 +91,7 @@ $POSTGRES_PASSWORD = [System.Text.Encoding]::UTF8.GetString([System.Convert]::Fr
 kubectl run xp-postgres-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:17.0.0-debian-12-r6 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host xp-postgres-postgresql -U postgres -d postgres -p 5432
 ```
 
-### Encode secret in PowerShell
+### Encode secret in PowerShell for k8s secrets
 
 ```sh
 [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes('secret-value'))
@@ -102,6 +102,18 @@ kubectl run xp-postgres-postgresql-client --rm --tty -i --restart='Never' --name
 ```sh
 CREATE TABLE todos (id SERIAL PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL);
 CREATE TABLE users (id SERIAL PRIMARY KEY, name TEXT NOT NULL);
+```
+
+### list databases psql
+
+```sh
+\l
+```
+
+### Connect to database in psql
+
+```sh
+\c [DBNAME]
 ```
 
 ### Exit psql
