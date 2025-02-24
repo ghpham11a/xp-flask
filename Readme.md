@@ -83,12 +83,25 @@ helm install xp-postgres -f dev-postgres-values.yaml bitnami/postgresql
 helm uninstall xp-postgres
 ```
 
-### Connect to db
+### Connect to psql in Powershell
 
 ```sh
 $POSTGRES_PASSWORD = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String((kubectl get secret --namespace default xp-postgres-postgresql -o jsonpath="{.data.postgres-password}")))
 
 kubectl run xp-postgres-postgresql-client --rm --tty -i --restart='Never' --namespace default --image docker.io/bitnami/postgresql:17.0.0-debian-12-r6 --env="PGPASSWORD=$POSTGRES_PASSWORD" --command -- psql --host xp-postgres-postgresql -U postgres -d postgres -p 5432
+```
+
+### Connect to psql in bash
+
+```sh
+secret=$(kubectl get secret --namespace default xp-postgres-postgresql -o jsonpath="{.data.postgres-password}")
+
+POSTGRES_PASSWORD=$(echo "$secret" | base64 --decode)
+
+kubectl run -i --tty temp-psql-client --rm --restart='Never' \
+  --image docker.io/bitnami/postgresql:17.0.0-debian-12-r6 \
+  --env="PGPASSWORD=$POSTGRES_PASSWORD" \
+  --command -- psql --host xp-postgres-postgresql -U postgres -d postgres -p 5432
 ```
 
 ### Encode secret in PowerShell for k8s secrets
